@@ -10,7 +10,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs } from 'vue';
+import { defineComponent, ref, reactive, toRefs, onMounted } from 'vue';
+import {getRequest} from "@/http/request_service";
 // 定义数据类型接口
 interface DataProps {
   girls: string[];
@@ -24,8 +25,11 @@ export default defineComponent({
   },
   
   setup(){
+    onMounted(()=>{
+      getData()
+    });
     const data: DataProps = reactive({
-      girls: ["大脚", "刘英", "晓红"],
+      girls: ["TEST-A", "TEST-B", "TEST-C"],
       selectGirl: "",
       selectGirlFun: (index: number) => {
         data.selectGirl = data.girls[index];
@@ -33,9 +37,14 @@ export default defineComponent({
     });
     
     const refData = toRefs(data);
-
+    const getData = ()=>{
+      getRequest("https://api.shadiao.pro/chp").then((res:any)=>{
+        console.log(res);
+      })
+    }
     return {
       ...refData,
+      getData
     };
     // const list = ref([1,2,3]);
     // const clickValue =ref("");
@@ -47,7 +56,7 @@ export default defineComponent({
     //   clickValue,
     //   handleClick
     // }
-  }
+  },
 });
 </script>
 
